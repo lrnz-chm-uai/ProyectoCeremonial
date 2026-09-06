@@ -5,6 +5,7 @@ using UnityEngine.InputSystem; // Por defecto puedo usar WASD para mover al juga
 
 public class PlayerController : MonoBehaviour
 {
+    public float speed = 0; // Variable pública para controlar la velocidad del jugador, se puede ajustar desde el Inspector de Unity
 
     private Rigidbody rb; // Variable para almacenar el componente Rigidbody del jugador
     private float movementX;
@@ -32,6 +33,6 @@ public class PlayerController : MonoBehaviour
         // Por ejemplo, se podría aplicar una fuerza al Rigidbody del jugador para moverlo en la dirección del vector de movimiento.
         Vector3 movement = new Vector3(movementX, 0.0f, movementY); // Crear un vector de movimiento en 3D a partir del vector de movimiento en 2D
                                                                     // 0.0f en la componente y indica que no hay movimiento vertical, solo horizontal.
-        rb.AddForce(movement);
+        rb.AddForce(movement * speed);
     }
 }
