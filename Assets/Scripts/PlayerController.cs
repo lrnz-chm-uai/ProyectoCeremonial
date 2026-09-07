@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
         // Aquí se puede implementar la lógica de movimiento del jugador usando el vector de movimiento obtenido en OnMove.
         // Por ejemplo, se podría aplicar una fuerza al Rigidbody del jugador para moverlo en la dirección del vector de movimiento.
         Vector3 movement = new Vector3(movementX, 0.0f, movementY); // Crear un vector de movimiento en 3D a partir del vector de movimiento en 2D
-                                                                    // 0.0f en la componente y indica que no hay movimiento vertical, solo horizontal.
+                                                                    // 0.0f en la componente y indica que no hay movimiento en el eje y, solo en el plano 2D (x, z).
         rb.AddForce(movement * speed);
     }
 }

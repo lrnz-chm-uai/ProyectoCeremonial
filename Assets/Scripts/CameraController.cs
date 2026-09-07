@@ -12,6 +12,8 @@ public class CameraController : MonoBehaviour // Este script controla la cámara
     // Start is called before the first frame update
     void Start()
     {
+        // Asignar la posición X de la cámara igual a la del jugador
+        transform.position = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
         // Necesito calcular la diferencia de posición entre la cámara y el jugador al inicio del juego,
         // para mantener esa diferencia constante mientras la cámara sigue al jugador.
         offset = transform.position - player.transform.position;
