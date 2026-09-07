@@ -10,11 +10,15 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb; // Variable para almacenar el componente Rigidbody del jugador
     private float movementX;
     private float movementY;
+    
+    private int redPillsCount, bluePillsCount;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>(); // Obtener el componente Rigidbody del jugador
+        redPillsCount = 0; // Inicializar el contador de Red Pills
+        bluePillsCount = 0;
     }
 
     void OnMove(InputValue movementValue)
@@ -42,10 +46,16 @@ public class PlayerController : MonoBehaviour
                                         // vea afectado por la gravedad). Esto es para que Unity lo interprete como un objeto dinamico
                                         // y no estatico.
     {
-        if (other.gameObject.CompareTag("Pill")) // Verificar si el objeto con el que colisiona el jugador tiene el tag "Pill"
+        if (other.gameObject.CompareTag("RedPill")) // Verificar si el objeto con el que colisiona el jugador tiene el tag "RedPill"
                                                  // Esto lo hago mediante prefabs
         {
             other.gameObject.SetActive(false); // Desactivar el objeto coleccionable al colisionar con el jugador
+            redPillsCount++; // Incrementar el contador de Red Pills recogidos
+        }
+        else if (other.gameObject.CompareTag("BluePill")) 
+        {
+            other.gameObject.SetActive(false); 
+            bluePillsCount++; 
         }
     }
 }
