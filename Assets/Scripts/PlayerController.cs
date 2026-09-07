@@ -6,7 +6,7 @@ using UnityEngine.InputSystem; // Por defecto puedo usar WASD para mover al juga
 public class PlayerController : MonoBehaviour
 {
     public float speed = 0; // Variable pública para controlar la velocidad del jugador, se puede ajustar desde el Inspector de Unity
-
+    
     private Rigidbody rb; // Variable para almacenar el componente Rigidbody del jugador
     private float movementX;
     private float movementY;
@@ -34,5 +34,18 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = new Vector3(movementX, 0.0f, movementY); // Crear un vector de movimiento en 3D a partir del vector de movimiento en 2D
                                                                     // 0.0f en la componente y indica que no hay movimiento en el eje y, solo en el plano 2D (x, z).
         rb.AddForce(movement * speed);
+    }
+
+    // Metodo para detectar colisiones con coleccionables y desactivarlos
+    void OnTriggerEnter(Collider other) // Para que este método funcione, el jugador debe tener un Collider con la opción "Is Trigger" activada,
+                                        // y los objetos coleccionables deben tener un Collider y un Rigidbody (aunque sea kinematic y que no se
+                                        // vea afectado por la gravedad). Esto es para que Unity lo interprete como un objeto dinamico
+                                        // y no estatico.
+    {
+        if (other.gameObject.CompareTag("Pill")) // Verificar si el objeto con el que colisiona el jugador tiene el tag "Pill"
+                                                 // Esto lo hago mediante prefabs
+        {
+            other.gameObject.SetActive(false); // Desactivar el objeto coleccionable al colisionar con el jugador
+        }
     }
 }

@@ -870,6 +870,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 4.4
+  collectible: {fileID: 968823716898902583, guid: 9b71ae89d5287f14f8ef06fd70710d15,
+    type: 3}
 --- !u!1 &721811084
 GameObject:
   m_ObjectHideFlags: 0
