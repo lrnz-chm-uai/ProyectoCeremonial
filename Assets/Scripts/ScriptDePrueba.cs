@@ -33,7 +33,6 @@ public class ScriptDePrueba : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W))
         {
             Debug.Log($"{personaje1.Nombre} ataca a {personaje2.Nombre} presionando la tecla W.");
-            // TODO: revisar por qué no imprime el mensaje de ataque en la consola con cada ataque, pero sí imprime el estado actual de los personajes.
             personaje1.AtacarConDerecha(personaje2);
             Debug.Log($"Estado actual: {personaje2.Nombre} tiene {personaje2.Vida} de vida.");
         }
