@@ -32,6 +32,16 @@ public class PlayerController : MonoBehaviour
         SetCountTexts("Blue");
     }
 
+    void OnMove(InputValue movementValue)
+    {
+        Vector2 movementVector = movementValue.Get<Vector2>();
+        // La linea de arriba define un vector de movimiento en 2D, que se puede usar para mover al jugador en el juego.
+        // Vector2 es una estructura que representa un vector en 2 dimensiones, con componentes x e y.
+        // 'Get' es un método que obtiene el valor del input.
+        movementX = movementVector.x;
+        movementY = movementVector.y;
+    }
+
     private void FixedUpdate() // FixedUpdate se llama a intervalos fijos y es el lugar adecuado para manejar la física del juego
     {
         // Aquí se puede implementar la lógica de movimiento del jugador usando el vector de movimiento obtenido en OnMove.
@@ -69,20 +79,19 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy")) // Verificar si el objeto con el que colisiona
                                                       // el jugador tiene el tag "Enemy"
         {
-            gameOverText.GetComponent<TextMeshProUGUI>().text = "Game over mate"; // TODO: el mensaje solo se muestre a partir del input del jugador
+            gameOverText.text = "Game over mate"; // TODO: el mensaje solo se muestre a partir del input del jugador
             gameOverText.gameObject.SetActive(true);
-            Destroy(gameObject);
-        }
-    }
 
-    void OnMove(InputValue movementValue)
-    {
-        Vector2 movementVector = movementValue.Get<Vector2>();
-        // La linea de arriba define un vector de movimiento en 2D, que se puede usar para mover al jugador en el juego.
-        // Vector2 es una estructura que representa un vector en 2 dimensiones, con componentes x e y.
-        // 'Get' es un método que obtiene el valor del input.
-        movementX = movementVector.x;
-        movementY = movementVector.y;
+            // Pausar el juego explícitamente
+            //Time.timeScale = 0f;
+
+            rb.isKinematic = true; // Desactivar la física del jugador
+            enabled = false; // Desactivar el script del jugador para evitar procesamiento adicional
+            
+            Destroy(gameObject, 1f); // Destruir el objeto con una pequeña pausa para permitir que el mensaje se renderice
+            //Debug.Log("Colisión detectada"); // Para verificar que la colisión ocurre
+            //Debug.Log("gameOverText asignado: " + (gameOverText != null)); // Verifica la referencia
+        }
     }
 
     void SetCountTexts(string pillType) // Método para actualizar el texto de los contadores de Red Pills y Blue Pills en la interfaz de usuario
@@ -98,8 +107,26 @@ public class PlayerController : MonoBehaviour
 
         if (redPillsCount + bluePillsCount >= 8) // Si el jugador ha recogido al menos 4 Red Pills y 4 Blue Pills
         {
-            Destroy(GameObject.FindGameObjectWithTag("Enemy")); // TODO: no lo quiero destruir, simplemente detenerlo
-            gameOverText.gameObject.SetActive(true); // TODO: puedo pausar el juego?
+            // Destruye "Enemy"
+            //Destroy(GameObject.FindGameObjectWithTag("Enemy"));
+
+            // No destruir "Enemy", sino que lo detiene
+            GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
+            if (enemy != null)
+            {
+                EnemyMovement enemyMovement = enemy.GetComponent<EnemyMovement>();
+                if (enemyMovement != null)
+                {
+                    enemyMovement.enabled = false;
+                }
+                UnityEngine.AI.NavMeshAgent agent = enemy.GetComponent<UnityEngine.AI.NavMeshAgent>();
+                if (agent != null)
+                {
+                    agent.isStopped = true;
+                    agent.velocity = Vector3.zero;
+                }
+            }
+            gameOverText.gameObject.SetActive(true); // TODO: puedo resetear la escena?
         }
     }
 
