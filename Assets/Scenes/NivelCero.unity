@@ -700,7 +700,7 @@ GameObject:
   - component: {fileID: 568602308}
   - component: {fileID: 568602307}
   m_Layer: 0
-  m_Name: ObstaculeZero
+  m_Name: Obstacule0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1579,7 +1579,7 @@ GameObject:
   - component: {fileID: 1445558270}
   - component: {fileID: 1445558274}
   m_Layer: 0
-  m_Name: ObstaculeOne
+  m_Name: Obstacule1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1844,6 +1844,8 @@ GameObject:
   - component: {fileID: 1526790904}
   - component: {fileID: 1526790903}
   - component: {fileID: 1526790902}
+  - component: {fileID: 1526790906}
+  - component: {fileID: 1526790905}
   m_Layer: 0
   m_Name: Enemy0
   m_TagString: Untagged
@@ -1937,6 +1939,41 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1526790900}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1526790905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526790900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eda7d648d9482e744bdeab8292546eca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 695738244}
+--- !u!195 &1526790906
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526790900}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1
+  m_BaseOffset: 0.5
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &1528333517
 GameObject:
   m_ObjectHideFlags: 0
