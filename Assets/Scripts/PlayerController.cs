@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem; // Por defecto puedo usar WASD para mover al jugador, pero puedo cambiarlo en el Input System de Unity.
+using TMPro; // TMPro me permite usar texto en 3D en Unity, lo cual es útil para mostrar información en el juego, como el contador de Red Pills y Blue Pills.
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class PlayerController : MonoBehaviour
     private float movementY;
     
     private int redPillsCount, bluePillsCount;
+    public TextMeshProUGUI redPillsCountText, bluePillsCountText; // Variables públicas para mostrar el contador de Red Pills y Blue Pills en la interfaz de usuario
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +21,8 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>(); // Obtener el componente Rigidbody del jugador
         redPillsCount = 0; // Inicializar el contador de Red Pills
         bluePillsCount = 0;
+
+        SetCountTexts();
     }
 
     void OnMove(InputValue movementValue)
@@ -29,6 +33,12 @@ public class PlayerController : MonoBehaviour
         // 'Get' es un método que obtiene el valor del input.
         movementX = movementVector.x;
         movementY = movementVector.y;
+    }
+
+    void SetCountTexts() // Método para actualizar el texto de los contadores de Red Pills y Blue Pills en la interfaz de usuario
+    {
+        redPillsCountText.text = "Red Pills: " + redPillsCount.ToString(); // Actualizar el texto del contador de Red Pills
+        bluePillsCountText.text = "Blue Pills: " + bluePillsCount.ToString(); // Actualizar el texto del contador de Blue Pills
     }
 
     private void FixedUpdate() // FixedUpdate se llama a intervalos fijos y es el lugar adecuado para manejar la física del juego
@@ -57,5 +67,6 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false); 
             bluePillsCount++; 
         }
+        SetCountTexts(); // Actualizar el texto de los contadores de Red Pills y Blue Pills en la interfaz de usuario
     }
 }
