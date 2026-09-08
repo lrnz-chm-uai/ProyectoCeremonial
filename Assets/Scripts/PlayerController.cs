@@ -7,14 +7,16 @@ using TMPro; // TMPro me permite usar texto en 3D en Unity, lo cual es útil par
 public class PlayerController : MonoBehaviour
 {
     public float speed = 0; // Variable pública para controlar la velocidad del jugador, se puede ajustar desde el Inspector de Unity
-    
+    public TextMeshProUGUI redPillsCountText, bluePillsCountText; // Variables públicas para mostrar el contador de Red Pills y Blue Pills en la interfaz de usuario
+    public TextMeshProUGUI gameOverText, redPillPickUpText, bluePillPickUpMessage;
+
     private Rigidbody rb; // Variable para almacenar el componente Rigidbody del jugador
     private float movementX;
     private float movementY;
-    
+    private Coroutine redPillCoroutine, bluePillCoroutine;
+
+
     private int redPillsCount, bluePillsCount;
-    public TextMeshProUGUI redPillsCountText, bluePillsCountText; // Variables públicas para mostrar el contador de Red Pills y Blue Pills en la interfaz de usuario
-    public TextMeshProUGUI GameOverText, RedPillPickUpText, BluePillPickUpMessage;
 
     // Start is called before the first frame update
     void Start()
@@ -23,9 +25,9 @@ public class PlayerController : MonoBehaviour
         redPillsCount = 0; // Inicializar el contador de Red Pills
         bluePillsCount = 0;
 
-        GameOverText.gameObject.SetActive(false);
-        RedPillPickUpText.gameObject.SetActive(false);
-        BluePillPickUpMessage.gameObject.SetActive(false);
+        gameOverText.gameObject.SetActive(false);
+        redPillPickUpText.gameObject.SetActive(false);
+        bluePillPickUpMessage.gameObject.SetActive(false);
         SetCountTexts("Red");
         SetCountTexts("Blue");
     }
@@ -62,6 +64,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy")) // Verificar si el objeto con el que colisiona
+                                                      // el jugador tiene el tag "Enemy"
+        {
+            gameOverText.GetComponent<TextMeshProUGUI>().text = "Game over mate"; // TODO: el mensaje solo se muestre a partir del input del jugador
+            gameOverText.gameObject.SetActive(true);
+            Destroy(gameObject);
+        }
+    }
+
     void OnMove(InputValue movementValue)
     {
         Vector2 movementVector = movementValue.Get<Vector2>();
@@ -85,8 +98,8 @@ public class PlayerController : MonoBehaviour
 
         if (redPillsCount + bluePillsCount >= 8) // Si el jugador ha recogido al menos 4 Red Pills y 4 Blue Pills
         {
-            // GameOverText.text = "No more pills dude"; // Mostrar el mensaje de Game Over en la interfaz de usuario
-            GameOverText.gameObject.SetActive(true);
+            Destroy(GameObject.FindGameObjectWithTag("Enemy")); // TODO: no lo quiero destruir, simplemente detenerlo
+            gameOverText.gameObject.SetActive(true); // TODO: puedo pausar el juego?
         }
     }
 
@@ -94,11 +107,16 @@ public class PlayerController : MonoBehaviour
     {
         if (pillType == "Red")
         {
-            StartCoroutine(ShowMessageForDuration(RedPillPickUpText.gameObject));
+            if (redPillCoroutine != null)
+                StopCoroutine(nameof(ShowMessageForDuration)); // Detener la corrutina si ya se está ejecutando,
+                                                           // para que no se solapen los mensajes
+            redPillCoroutine = StartCoroutine(ShowMessageForDuration(redPillPickUpText.gameObject));
         }
         else if (pillType == "Blue")
         {
-            StartCoroutine(ShowMessageForDuration(BluePillPickUpMessage.gameObject));
+            if (bluePillCoroutine != null)
+                StopCoroutine(nameof(ShowMessageForDuration));
+            bluePillCoroutine = StartCoroutine(ShowMessageForDuration(bluePillPickUpMessage.gameObject));
         }
     }
 
