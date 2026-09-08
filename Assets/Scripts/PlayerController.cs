@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     
     private int redPillsCount, bluePillsCount;
     public TextMeshProUGUI redPillsCountText, bluePillsCountText; // Variables públicas para mostrar el contador de Red Pills y Blue Pills en la interfaz de usuario
+    public TextMeshProUGUI GameOverText, RedPillPickUpText, BluePillPickUpMessage;
 
     // Start is called before the first frame update
     void Start()
@@ -22,23 +23,11 @@ public class PlayerController : MonoBehaviour
         redPillsCount = 0; // Inicializar el contador de Red Pills
         bluePillsCount = 0;
 
-        SetCountTexts();
-    }
-
-    void OnMove(InputValue movementValue)
-    {
-        Vector2 movementVector = movementValue.Get<Vector2>();
-        // La linea de arriba define un vector de movimiento en 2D, que se puede usar para mover al jugador en el juego.
-        // Vector2 es una estructura que representa un vector en 2 dimensiones, con componentes x e y.
-        // 'Get' es un método que obtiene el valor del input.
-        movementX = movementVector.x;
-        movementY = movementVector.y;
-    }
-
-    void SetCountTexts() // Método para actualizar el texto de los contadores de Red Pills y Blue Pills en la interfaz de usuario
-    {
-        redPillsCountText.text = "Red Pills: " + redPillsCount.ToString(); // Actualizar el texto del contador de Red Pills
-        bluePillsCountText.text = "Blue Pills: " + bluePillsCount.ToString(); // Actualizar el texto del contador de Blue Pills
+        GameOverText.gameObject.SetActive(false);
+        RedPillPickUpText.gameObject.SetActive(false);
+        BluePillPickUpMessage.gameObject.SetActive(false);
+        SetCountTexts("Red");
+        SetCountTexts("Blue");
     }
 
     private void FixedUpdate() // FixedUpdate se llama a intervalos fijos y es el lugar adecuado para manejar la física del juego
@@ -61,12 +50,62 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.SetActive(false); // Desactivar el objeto coleccionable al colisionar con el jugador
             redPillsCount++; // Incrementar el contador de Red Pills recogidos
+            SetCountTexts("Red");
+            SetPillPickUpText("Red");
         }
         else if (other.gameObject.CompareTag("BluePill")) 
         {
             other.gameObject.SetActive(false); 
             bluePillsCount++; 
+            SetCountTexts("Blue");
+            SetPillPickUpText("Blue");
         }
-        SetCountTexts(); // Actualizar el texto de los contadores de Red Pills y Blue Pills en la interfaz de usuario
+    }
+
+    void OnMove(InputValue movementValue)
+    {
+        Vector2 movementVector = movementValue.Get<Vector2>();
+        // La linea de arriba define un vector de movimiento en 2D, que se puede usar para mover al jugador en el juego.
+        // Vector2 es una estructura que representa un vector en 2 dimensiones, con componentes x e y.
+        // 'Get' es un método que obtiene el valor del input.
+        movementX = movementVector.x;
+        movementY = movementVector.y;
+    }
+
+    void SetCountTexts(string pillType) // Método para actualizar el texto de los contadores de Red Pills y Blue Pills en la interfaz de usuario
+    {
+        if (pillType == "Red")
+        {
+            redPillsCountText.text = "Red Pills: " + redPillsCount.ToString(); // Actualizar el texto del contador de Red Pills
+        }
+        else if (pillType == "Blue")
+        {
+            bluePillsCountText.text = "Blue Pills: " + bluePillsCount.ToString(); // Actualizar el texto del contador de Blue Pills
+        }
+
+        if (redPillsCount + bluePillsCount >= 8) // Si el jugador ha recogido al menos 4 Red Pills y 4 Blue Pills
+        {
+            // GameOverText.text = "No more pills dude"; // Mostrar el mensaje de Game Over en la interfaz de usuario
+            GameOverText.gameObject.SetActive(true);
+        }
+    }
+
+    void SetPillPickUpText(string pillType)
+    {
+        if (pillType == "Red")
+        {
+            StartCoroutine(ShowMessageForDuration(RedPillPickUpText.gameObject));
+        }
+        else if (pillType == "Blue")
+        {
+            StartCoroutine(ShowMessageForDuration(BluePillPickUpMessage.gameObject));
+        }
+    }
+
+    private IEnumerator ShowMessageForDuration(GameObject messageObject)
+    {
+        messageObject.SetActive(true);
+        yield return new WaitForSeconds(1.5f);
+        messageObject.SetActive(false);
     }
 }
