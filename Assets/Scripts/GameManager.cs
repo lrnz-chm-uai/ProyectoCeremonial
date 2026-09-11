@@ -5,11 +5,13 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public GameObject startPanel;
-    public GameObject countdownClock, noTimeLeftMessage, onPauseText;
+    public GameObject countdownClock, realityText, simulationText, onPauseText;
     public float levelTimeLimit = 30f; // Tiempo límite para el nivel en segundos.
 
     private bool isPaused;
     private float remainingTime;
+
+    [SerializeField] private PlayerController playerController; // Referencia al PlayerController para acceder a los contadores de Red Pills y Blue Pills.
 
     void Start()
     {
@@ -112,7 +114,19 @@ public class GameManager : MonoBehaviour
 
         if (remainingTime <= 0)
         {
-            noTimeLeftMessage.SetActive(true);
+            if (playerController.RedPillsCount > playerController.BluePillsCount)
+            {
+                realityText.SetActive(true);
+
+            }
+            else if (playerController.BluePillsCount > playerController.RedPillsCount)
+            {
+                simulationText.SetActive(true);
+            }
+            else
+            {
+                playerController.GameOverText.gameObject.SetActive(true);
+            }
             GameOver();
         }
     }

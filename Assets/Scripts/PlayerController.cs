@@ -15,8 +15,12 @@ public class PlayerController : MonoBehaviour
     private float movementY;
     private Coroutine redPillCoroutine, bluePillCoroutine;
 
-
-    private int redPillsCount, bluePillsCount;
+    private int redPillsCount; // Variable privada para contar el número de Red Pills recogidos
+    private int bluePillsCount;
+    public int RedPillsCount => redPillsCount; // Propiedad pública para acceder al contador de Red Pills desde otros scripts
+    public int BluePillsCount => bluePillsCount;
+    public TextMeshProUGUI GameOverText => gameOverText; // Propiedad pública para acceder al texto de Game Over desde otros scripts
+    private int maxPills = 14;
 
     // Start is called before the first frame update
     void Start()
@@ -106,7 +110,7 @@ public class PlayerController : MonoBehaviour
             bluePillsCountText.text = "Blue Pills: " + bluePillsCount.ToString(); // Actualizar el texto del contador de Blue Pills
         }
 
-        if (redPillsCount + bluePillsCount >= 8) // Si el jugador ha recogido al menos 4 Red Pills y 4 Blue Pills
+        if (redPillsCount + bluePillsCount >= maxPills) // Si el jugador ha recogido todas las pills
         {
             // Destruye "Enemy"
             //Destroy(GameObject.FindGameObjectWithTag("Enemy"));
