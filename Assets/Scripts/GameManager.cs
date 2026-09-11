@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public GameObject startPanel;
-    public GameObject countdownClock, noTimeLeftMessage;
+    public GameObject countdownClock, noTimeLeftMessage, onPauseText;
     public float levelTimeLimit = 30f; // Tiempo límite para el nivel en segundos.
 
     private bool isPaused;
@@ -86,6 +86,11 @@ public class GameManager : MonoBehaviour
 
         isPaused = !isPaused;
         Time.timeScale = isPaused ? 0f : 1f;
+
+        if (onPauseText != null)
+        {
+            onPauseText.SetActive(isPaused);
+        }
     }
 
     /// Recarga la escena actual para reiniciar la partida.
