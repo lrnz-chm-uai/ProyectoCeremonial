@@ -1,23 +1,30 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject startPanel;
+    public GameObject countdownClock, noTimeLeftMessage;
+    public float levelTimeLimit = 30f; // Tiempo límite para el nivel en segundos.
 
     private bool isPaused;
+    private float remainingTime;
 
     void Start()
     {
+        remainingTime = levelTimeLimit;
+        countdownClock.GetComponent<TextMeshProUGUI>().text = "Level ends in: " + levelTimeLimit;
         ShowStartPanel(true);
-        Time.timeScale = 0f;
+        Time.timeScale = 0f; // Pausa el juego al inicio para mostrar el panel de inicio.
     }
 
     void Update()
     {
+        HandleStartInput();
         HandlePauseInput();
         HandleResetInput();
-        HandleStartInput();
+        UpdateCountdown();
     }
 
     /// Alterna la pausa del juego con la tecla P.
@@ -49,7 +56,11 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W) ||
             Input.GetKeyDown(KeyCode.A) ||
             Input.GetKeyDown(KeyCode.S) ||
-            Input.GetKeyDown(KeyCode.D))
+            Input.GetKeyDown(KeyCode.D) ||
+            Input.GetKeyDown(KeyCode.UpArrow) ||
+            Input.GetKeyDown(KeyCode.DownArrow) ||
+            Input.GetKeyDown(KeyCode.LeftArrow) ||
+            Input.GetKeyDown(KeyCode.RightArrow))
         {
             ShowStartPanel(false);
             Time.timeScale = 1f;
@@ -86,6 +97,21 @@ public class GameManager : MonoBehaviour
 
     /// Permite reanudar el juego cuando termina la partida y se presiona R.
     /// Se puede invocar desde PlayerController si se detecta la muerte del jugador.
+    
+    void UpdateCountdown()
+    {
+        if (isPaused || startPanel.activeSelf) return;
+
+        remainingTime -= Time.unscaledDeltaTime;
+        countdownClock.GetComponent<TextMeshProUGUI>().text = "Level ends in: " + Mathf.Max(0, remainingTime).ToString("F1");
+
+        if (remainingTime <= 0)
+        {
+            noTimeLeftMessage.SetActive(true);
+            GameOver();
+        }
+    }
+
     public void GameOver()
     {
         isPaused = true;

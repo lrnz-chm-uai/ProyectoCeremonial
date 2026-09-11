@@ -25,9 +25,10 @@ public class PlayerController : MonoBehaviour
         redPillsCount = 0; // Inicializar el contador de Red Pills
         bluePillsCount = 0;
 
-        gameOverText.gameObject.SetActive(false);
-        redPillPickUpText.gameObject.SetActive(false);
-        bluePillPickUpMessage.gameObject.SetActive(false);
+        //gameOverText.gameObject.SetActive(false);
+        //redPillPickUpText.gameObject.SetActive(false);
+        //bluePillPickUpMessage.gameObject.SetActive(false);
+        // Por default, inhabilitados desde el editor de Unity
         SetCountTexts("Red");
         SetCountTexts("Blue");
     }
@@ -126,7 +127,7 @@ public class PlayerController : MonoBehaviour
                     agent.velocity = Vector3.zero;
                 }
             }
-            gameOverText.gameObject.SetActive(true); // TODO: puedo resetear la escena?
+            gameOverText.gameObject.SetActive(true);
         }
     }
 
@@ -150,7 +151,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator ShowMessageForDuration(GameObject messageObject)
     {
         messageObject.SetActive(true);
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
         messageObject.SetActive(false);
     }
 }
