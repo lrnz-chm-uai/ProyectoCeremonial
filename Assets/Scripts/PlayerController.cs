@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public float speed = 0; // Variable pública para controlar la velocidad del jugador, se puede ajustar desde el Inspector de Unity
     public TextMeshProUGUI redPillsCountText, bluePillsCountText; // Variables públicas para mostrar el contador de Red Pills y Blue Pills en la interfaz de usuario
     public TextMeshProUGUI gameOverText, redPillPickUpText, bluePillPickUpMessage;
+    public GameObject countdownClock;
 
     private Rigidbody rb; // Variable para almacenar el componente Rigidbody del jugador
     private float movementX;
@@ -84,8 +85,10 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy")) // Verificar si el objeto con el que colisiona
                                                       // el jugador tiene el tag "Enemy"
         {
-            gameOverText.text = "Game over mate"; // TODO: el mensaje solo se muestre a partir del input del jugador
+            gameOverText.text = "Game over mate";
             gameOverText.gameObject.SetActive(true);
+            // Desactivar el reloj de cuenta regresiva al perder
+            countdownClock.gameObject.SetActive(false);
 
             // Pausar el juego explícitamente
             //Time.timeScale = 0f;
@@ -93,7 +96,7 @@ public class PlayerController : MonoBehaviour
             rb.isKinematic = true; // Desactivar la física del jugador
             enabled = false; // Desactivar el script del jugador para evitar procesamiento adicional
             
-            Destroy(gameObject, 1f); // Destruir el objeto con una pequeña pausa para permitir que el mensaje se renderice
+            gameObject.SetActive(false); // Desactivar el jugador para que no pueda moverse ni interactuar con el juego
             //Debug.Log("Colisión detectada"); // Para verificar que la colisión ocurre
             //Debug.Log("gameOverText asignado: " + (gameOverText != null)); // Verifica la referencia
         }
@@ -141,7 +144,7 @@ public class PlayerController : MonoBehaviour
         {
             if (redPillCoroutine != null)
                 StopCoroutine(nameof(ShowMessageForDuration)); // Detener la corrutina si ya se está ejecutando,
-                                                           // para que no se solapen los mensajes
+                                                               // para que no se solapen los mensajes
             redPillCoroutine = StartCoroutine(ShowMessageForDuration(redPillPickUpText.gameObject));
         }
         else if (pillType == "Blue")

@@ -1,10 +1,10 @@
+using System.Linq; // Para usar métodos de extensión como FirstOrDefault
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject startPanel;
     public GameObject countdownClock, realityText, simulationText, onPauseText;
     public float levelTimeLimit = 30f; // Tiempo límite para el nivel en segundos.
 
@@ -13,10 +13,16 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private PlayerController playerController; // Referencia al PlayerController para acceder a los contadores de Red Pills y Blue Pills.
 
+    // Manejar todos los paneles con tag "Panel"
+    private GameObject[] startPanels;
+
     void Start()
     {
         remainingTime = levelTimeLimit;
         countdownClock.GetComponent<TextMeshProUGUI>().text = "Level ends in: " + levelTimeLimit;
+
+        // Encuentra todos los paneles con el tag "Panel"
+        startPanels = GameObject.FindGameObjectsWithTag("Panel");
         ShowStartPanel(true);
         Time.timeScale = 0f; // Pausa el juego al inicio para mostrar el panel de inicio.
     }
@@ -50,7 +56,7 @@ public class GameManager : MonoBehaviour
     /// Detecta WASD para ocultar el mensaje inicial y comenzar a jugar.
     private void HandleStartInput()
     {
-        if (startPanel == null || !startPanel.activeSelf)
+        if (startPanels == null || startPanels.Length == 0 || !startPanels.Any(p => p.activeSelf))
         {
             return;
         }
@@ -72,16 +78,17 @@ public class GameManager : MonoBehaviour
     /// Activa o desactiva el panel inicial.
     private void ShowStartPanel(bool show)
     {
-        if (startPanel != null)
+        if (startPanels == null) return;
+        foreach (var p in startPanels)
         {
-            startPanel.SetActive(show);
+            if (p != null) p.SetActive(show);
         }
     }
 
     /// Alterna el estado de pausa del juego.
     public void TogglePause()
     {
-        if (startPanel != null && startPanel.activeSelf)
+        if (startPanels != null && startPanels.Any(p => p != null && p.activeSelf))
         {
             return;
         }
@@ -104,10 +111,10 @@ public class GameManager : MonoBehaviour
 
     /// Permite reanudar el juego cuando termina la partida y se presiona R.
     /// Se puede invocar desde PlayerController si se detecta la muerte del jugador.
-    
+
     void UpdateCountdown()
     {
-        if (isPaused || startPanel.activeSelf) return;
+        if (isPaused || (startPanels != null && startPanels.Any(p => p != null && p.activeSelf))) return;
 
         remainingTime -= Time.unscaledDeltaTime;
         countdownClock.GetComponent<TextMeshProUGUI>().text = "Level ends in: " + Mathf.Max(0, remainingTime).ToString("F1");
